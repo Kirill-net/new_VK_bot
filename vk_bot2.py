@@ -18,19 +18,17 @@ class VK_BOT:
         goest_in_bd = bd.add_quests(qoest_inf[0])
         if goest_in_bd == False:  # если гостя нет формируем базу юзеров
             vk_bot.write_msg(qoest_inf[0], (f'Привет, {qoest_inf[1]}!\
-                    Формируется база подходящих тебе кандидатов....жди'))
+                    Формируется база подходящих для вас кандидатов....ждите'))
             # rev_sex = revers_sex(qoest_inf[4])
             # DATA_US = ap.data_users(qoest_inf[3], rev_sex, qoest_inf[5])
-            DATA_US = ap.data_users(2, 1, 1986) # цифры заведены для теста
-            print((DATA_US))
-            print (qoest_inf[0])
+            DATA_US = ap.data_users(2, 1, 1996) # цифры заведены для теста
             bd.add_users(qoest_inf[0], DATA_US)
             return 'Готово. Набери "next" или "следующий" для начала просмотра'
 
         if message.upper() == 'NEXT' or message.upper() == 'СЛЕДУЮЩИЙ':
             vk_bot.write_msg(qoest_inf[0], 'Идет поиск, ждите')
             photos = 'NONE'
-            while photos == 'NONE':  # проверяет наличие фото у кандидатов
+            while photos == 'NONE':  # проверяет наличие фото у кандидата
                 us = bd.get_user_random(qoest_inf[0])  #получаем рандомно юзера гостя
                 us_info = ap.get_user_info(us)  #получаем данные юзера
                 photos = ap.photos_user(us_info[0])  # если вернет NONE, хорошо бы заодно удалить
@@ -42,18 +40,16 @@ class VK_BOT:
             for event in longpoll.listen():
                 if event.type == VkEventType.MESSAGE_NEW:
                     if event.to_me:
-                        print('ok')
-                        request = event.text
-                        if request.upper == "ДА":
-                            print('добавляем')
-                            result = 'Добавили!\n Набери "next" или "следующий" для следующего просмотра'
+                        responce = event.text
+                        if responce.upper() == "ДА":
+                            result = 'ДОБАВИЛИ\nНабери "next" или "следующий" для следующего просмотра'
                             break
                         else:
                             result = 'Набери "next" или "следующий" для следующего просмотра'
                             break
             return result
         else:
-            return 'НЕ понял команду'
+            return 'Такой команды нет\nДля просмотра списка команд наберите "HELP"'
 
 
 
@@ -69,7 +65,6 @@ if __name__ == '__main__':
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW:
             if event.to_me:
-                print('!!!!')
                 vk_bot = VK_BOT()
                 vk_bot.write_msg(event.user_id, vk_bot.new_message(event))
 

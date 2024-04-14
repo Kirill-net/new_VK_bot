@@ -25,7 +25,7 @@ class VK_Users:
         params = {
             'access_token': self.TOKEN_USER,
             'sort': 0,
-            'count': 1000,
+            'count': 500,
             'has_photo': 1,
             'v': 5.199,
             'fields': 'city,sex,counters',
@@ -44,7 +44,6 @@ class VK_Users:
                     data_users.append(user['id'])
             except:
                 pass
-        print(len(data_users))
         return data_users
 
 
@@ -101,7 +100,7 @@ if __name__ == '__main__':
     # pprint(ap.data_users(2,1,1986))
     # user_vk = 809529828
     # print(ap.get_user_info(user_vk))
-    pprint(ap.data_users(2, 1, 1986))
+    # pprint(ap.data_users(2, 1, 1986))
     # user_vk = 711878878
-    # user_vk = 331276386
-    # pprint(ap.photos_user(user_vk))
+    user_vk = 326325001
+    pprint(ap.photos_user(user_vk))
