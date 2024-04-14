@@ -33,9 +33,8 @@ class Guest_vk_users(Base):
 
 
 def create_tables():
-#   Base.metadata.drop_all(engine)
+    # Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-
 
 class Metod:
 
@@ -75,13 +74,26 @@ class Metod:
         users_id = session.query(Guest_vk_users.vk_user_id).filter(Guest_vk_users.guest_id == guest_id).all()
         random_user_id = random.choice(users_id)
         r_users_vk = session.query(VK_users.vk_id).filter(VK_users.id == random_user_id[0]).first()[0]
+        session.close()
         return r_users_vk
+
+    # def decor_session(some_function):  # декоратор открытий сессий
+    #     def new_f(*args, **kwargs):
+    #         session = Session()
+    #         result = some_function(*args, **kwargs)
+    #         session.close()
+    #         return result
+    #     return new_f()
+
+    # @decor_session
+
 
 
 if __name__ == '__main__':
     create_tables()
     bd = Metod()
     # bd.add_quests(7777)
+    # bd.get_qoest_id(7777)
     # # print(bd.add_quests(88))
     # # users = [345345,4553,777,444,5555]
     # # bd.add_users(7777,users)

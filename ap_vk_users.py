@@ -9,15 +9,19 @@ class VK_Users:
         self.TOKEN_USER = TOKEN_USER
 
 
+    def revers_sex(self, sex):
+        if sex == 1:
+            rev_sex = 2
+        elif sex == 2:
+            rev_sex = 1
+        else:
+            rev_sex = 0
+        return rev_sex
+
+
     def data_users(self, city, sex, year):
         age_from = 2019-year
         age_to = 2029-year
-        if sex == 2:
-            rev_sex = 1
-        elif sex == 1:
-            rev_sex = 2
-        else:
-            rev_sex = 0
         params = {
             'access_token': self.TOKEN_USER,
             'sort': 0,
@@ -29,7 +33,7 @@ class VK_Users:
             'age_from': age_from,
             'age_to': age_to,
             'city': city,  # идентификатор , не название
-            'sex': rev_sex
+            'sex': sex
         }
         data_users = []
         response = requests.get(f'{self.URL_API}/users.search', params=params)
@@ -38,9 +42,9 @@ class VK_Users:
             try:
                 if user['sex'] == sex and user['city']['id'] == 2 :
                     data_users.append(user['id'])
-                    # print('ok')
             except:
                 pass
+        print(len(data_users))
         return data_users
 
 
@@ -80,7 +84,6 @@ class VK_Users:
                             photos.append(photo['sizes'][-1]['url'])
                             user_photos.remove(photo)
                             break
-                pprint(user_photos[1]['id'])
                 result = photos
             else:
                 result = 'NONE'
@@ -95,13 +98,10 @@ if __name__ == '__main__':
     city = 2
     year = 1986
     # data_qoest = ap.data_users(sex, city, year)
-    # pprint(data_qoest)
-    # user_vk = 711878878
-    user_vk = 809529828
+    # pprint(ap.data_users(2,1,1986))
+    # user_vk = 809529828
     # print(ap.get_user_info(user_vk))
-    # pprint(data_qoest[0])
+    pprint(ap.data_users(2, 1, 1986))
     # user_vk = 711878878
     # user_vk = 331276386
     # pprint(ap.photos_user(user_vk))
-
-    pprint(ap.photos_user(user_vk))
