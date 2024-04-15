@@ -42,14 +42,52 @@ class VK_BOT:
                     if event.to_me:
                         responce = event.text
                         if responce.upper() == "ДА":
+                            bd.correct_like(qoest_inf[0], us_info[0])
                             result = 'ДОБАВИЛИ\nНабери "next" или "следующий" для следующего просмотра'
                             break
                         else:
                             result = 'Набери "next" или "следующий" для следующего просмотра'
                             break
             return result
+
+
+        elif message.upper() == 'HELP':
+            return 'Доступны команды:\nHELP/next/следующий/избранное/СБРОС'
+
+
+        # elif message.upper() == 'СБРОС':
+        #     vk_bot.write_msg(qoest_inf[0], 'Сейчас произойдет сброс Базы Данных\n'
+        #                                    'Если уверены, наберите "Да"')
+        #     for event in longpoll.listen():
+        #         if event.type == VkEventType.MESSAGE_NEW:
+        #             if event.to_me:
+        #                 responce = event.text
+        #                 if responce.upper() == "ДА":
+        #                     bd.reset_base(qoest_inf[0])
+        #                     result = 'ВАША БAЗА СБРОШЕНА\n(для создания новой базы отправьте любое сообщение)'
+        #                     break
+        #                 else:
+        #                     result = 'Набери "next" или "следующий" для следующего просмотра'
+        #                     break
+        #     return result
+
+        elif message.upper() == 'ИЗБРАННОЕ':
+            users_like = bd.get_users_likes(qoest_inf[0])
+            if len(users_like) > 0:
+                vk_bot.write_msg(qoest_inf[0], 'Список Имен:\n\n')
+                for user in users_like:
+                    us_info = ap.get_user_info(user)
+                    vk_bot.write_msg(qoest_inf[0], f'{us_info[1]} {us_info[2]}')
+                result = 'Готово'
+            else:
+                result = 'Список избранного пуст!'
+            return result
+
+
         else:
             return 'Такой команды нет\nДля просмотра списка команд наберите "HELP"'
+
+
 
 
 

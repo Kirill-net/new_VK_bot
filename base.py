@@ -17,7 +17,7 @@ class Bot_guests(Base):
 class VK_users(Base):
     __tablename__ = "vk_users"
     id = sq.Column(sq.Integer, primary_key=True)
-    vk_id = sq.Column(sq.Integer, nullable=False, unique=True)
+    vk_id = sq.Column(sq.Integer, nullable=False)
 
 
 class Guest_vk_users(Base):
@@ -25,7 +25,7 @@ class Guest_vk_users(Base):
     id = sq.Column(sq.Integer, primary_key=True)
     guest_id = sq.Column(sq.Integer, sq.ForeignKey("bot_guests.id"), nullable=False)
     vk_user_id = sq.Column(sq.Integer, sq.ForeignKey("vk_users.id"), nullable=False)
-    # like = sq.Column(sq.Boolean)
+    like = sq.Column(sq.Boolean)
     # blacklist = sq.Column(sq.Boolean)
 
     bot_guests = relationship(Bot_guests, backref="guest_vk_users")
@@ -77,6 +77,38 @@ class Metod:
         session.close()
         return r_users_vk
 
+    def correct_like(self, qu_id, user):
+        session = Session()
+        result = session.query(Guest_vk_users.id).join(Bot_guests).join(VK_users)
+        result = result.filter(Bot_guests.guest_vk_id == qu_id, VK_users.vk_id == user).first()[0]
+        correct = session.get(Guest_vk_users, result)
+        correct.like = True
+        session.commit()
+        session.close()
+
+    def get_users_likes(self, qu_id):
+        session = Session()
+        list_users = []
+        result = session.query(VK_users.vk_id).join(Guest_vk_users).join(Bot_guests)
+        result = result.filter(Bot_guests.guest_vk_id == qu_id, Guest_vk_users.like == True).all()
+        for user in result:
+            list_users+= [user[0]]
+        return list_users
+        session.close()
+
+
+
+    def reset_base(self, qu_id):
+        session = Session()
+        qoest_id = self.get_qoest_id(qu_id)
+        session.query(Guest_vk_users).filter(Guest_vk_users.guest_id == qoest_id).delete()
+        session.commit()
+        session.query(Bot_guests).filter(Bot_guests.guest_vk_id == qu_id).delete()
+        session.commit()
+        session.close()
+
+
+
     # def decor_session(some_function):  # декоратор открытий сессий
     #     def new_f(*args, **kwargs):
     #         session = Session()
@@ -92,10 +124,13 @@ class Metod:
 if __name__ == '__main__':
     create_tables()
     bd = Metod()
-    # bd.add_quests(7777)
+    # bd.add_quests(555)
     # bd.get_qoest_id(7777)
     # # print(bd.add_quests(88))
-    # # users = [345345,4553,777,444,5555]
-    # # bd.add_users(7777,users)
+    users = [345345,4553,777,444,5555]
+    # bd.add_users(555,users)
     # user_vk = 711878878
     # print(bd.get_user_random(user_vk))
+    # bd.correct_like(555, 444)
+    # bd.reset_base(7777)
+    #bd.get_users_likes(7777)
