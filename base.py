@@ -187,22 +187,27 @@ class Metod:
         session.commit()
         session.close()
 
-    # def reset_base(self, qu_id):
-    #     """Удаляет данные гостя и закрепленных за ним
-    #     юзеров со всех таблиц
-    #
-    #     :param qu_id:
-    #     :return:
-    #     """
-    #     session = Session()
-    #     qoest_id = self.get_qoest_id(qu_id)
-    #     session.query(Guest_vk_users).\
-    #         filter(Guest_vk_users.guest_id == qoest_id).delete()
-    #     session.commit()
-    #     session.query(Bot_guests).\
-    #         filter(Bot_guests.guest_vk_id == qu_id).delete()
-    #     session.commit()
-    #     session.close()
+    def reset_base(self, qu_id):
+        """Удаляет данные гостя и закрепленных за ним
+        юзеров со всех таблиц
+
+        :param qu_id:
+        :return:
+        """
+        session = Session()
+        result = session.query(Guest_vk_users.vk_user_id) \
+            .join(Bot_guests, Bot_guests.id == Guest_vk_users.guest_id) \
+            .join(VK_users, VK_users.id == Guest_vk_users.vk_user_id) \
+            .filter(Bot_guests.guest_vk_id == qu_id).all()
+        for user in result:
+            session.query(Guest_vk_users) \
+                .filter(Guest_vk_users.vk_user_id == user[0]).delete()
+            session.query(VK_users) \
+                .filter(VK_users.id == user[0]).delete()
+        session.query(Bot_guests) \
+            .filter(Bot_guests.guest_vk_id == qu_id).delete()
+        session.commit()
+        session.close()
 
     # def decor_session(some_function):  # декоратор открытий сессий
     #     def new_f(*args, **kwargs):
@@ -226,5 +231,5 @@ if __name__ == '__main__':
     # bd.correct_like(555, 444)
     # bd.reset_base(7777)
     # bd.get_users_likes(7777)
-    # bd.delete_user(711878878, 850608824)
+    bd.reset_base(711878878)
     # @decor_session

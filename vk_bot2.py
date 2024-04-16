@@ -112,27 +112,27 @@ class VK_BOT:
             return result
 
         elif message.upper() == 'HELP':
-            return 'Доступны команды:\nHELP/next/следующий/избранное/'
+            return 'Доступны команды:\nHELP/next/следующий/избранное/Reset'
 
-        # elif message.upper() == 'СБРОС':
-        #     vk_bot.write_msg(qoest_inf[0],
-        #                      'Сейчас произойдет сброс Базы Данных\n'
-        #                                    'Если уверены, наберите "Да"')
-        #     for event in longpoll.listen():
-        #         if event.type == VkEventType.MESSAGE_NEW:
-        #             if event.to_me:
-        #                 responce = event.text
-        #                 if responce.upper() == "ДА":
-        #                     bd.reset_base(qoest_inf[0])
-        #                     result = ('ВАША БAЗА СБРОШЕНА\n'
-        #                               '(для создания новой базы '
-        #                               'отправьте любое сообщение)')
-        #                     break
-        #                 else:
-        #                     result = ('Набери "next" или '
-        #                               '"следующий" для следующего просмотра')
-        #                     break
-        #     return result
+        elif message.upper() == 'RESET':
+            vk_bot.write_msg(qoest_inf[0],
+                             'Сейчас произойдет сброс Вашей'
+                             ' Базы Данных\nЕсли уверены, наберите "Да"')
+            for event in longpoll.listen():
+                if event.type == VkEventType.MESSAGE_NEW:
+                    if event.to_me:
+                        responce = event.text
+                        if responce.upper() == "ДА":
+                            bd.reset_base(qoest_inf[0])
+                            result = ('ВАША БAЗА СБРОШЕНА\n'
+                                      '(для создания новой базы '
+                                      'отправьте любое сообщение)')
+                            break
+                        else:
+                            result = ('Набери "next" или '
+                                      '"следующий" для следующего просмотра')
+                            break
+            return result
 
         elif message.upper() == 'ИЗБРАННОЕ':
             users_like = bd.get_users_likes(qoest_inf[0])
