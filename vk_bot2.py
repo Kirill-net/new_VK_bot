@@ -63,9 +63,9 @@ class VK_BOT:
         if goest_in_bd is False:  # если гостя нет формируем базу юзеров
             vk_bot.write_msg(qoest_inf[0], (f'Привет, {qoest_inf[1]}!\
                     Формируется база подходящих для вас кандидатов....ждите'))
-            # rev_sex = revers_sex(qoest_inf[4])
-            # DATA_US = ap.data_users(qoest_inf[3], rev_sex, qoest_inf[5])
-            DATA_US = ap.data_users(2, 1, 1996)  # цифры заведены для теста
+            rev_sex = ap.revers_sex(qoest_inf[4])
+            DATA_US = ap.data_users(qoest_inf[3], rev_sex, int(qoest_inf[5]))
+            # DATA_US = ap.data_users(2, 1, 1996)  # цифры заведены для теста
             bd.add_users(qoest_inf[0], DATA_US)
             return 'Готово. Набери "next" или "следующий" для начала просмотра'
 
@@ -86,7 +86,9 @@ class VK_BOT:
                 self.message_photo(qoest_inf[0], url)
             vk_bot.write_msg(qoest_inf[0],
                              'Если хотите добавить в избранное '
-                             'наберите "ДА"')
+                             'наберите "ДА"\n'
+                             'или если хотите удалить из списка в базе '
+                             'наберите "УДАЛИТЬ"')
             for event in longpoll.listen():
                 if event.type == VkEventType.MESSAGE_NEW:
                     if event.to_me:
@@ -94,6 +96,12 @@ class VK_BOT:
                         if responce.upper() == "ДА":
                             bd.correct_like(qoest_inf[0], us_info[0])
                             result = ('ДОБАВИЛИ\n'
+                                      'Наберите "next" или "следующий" '
+                                      'для следующего просмотра')
+                            break
+                        elif responce.upper() == "УДАЛИТЬ":
+                            bd.delete_user(qoest_inf[0], us)
+                            result = ('УДАЛЕН\n'
                                       'Наберите "next" или "следующий" '
                                       'для следующего просмотра')
                             break

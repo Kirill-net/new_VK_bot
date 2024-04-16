@@ -1,5 +1,4 @@
 import requests
-from Constant import TOKEN_USER
 
 
 class VK_Users:
@@ -40,7 +39,7 @@ class VK_Users:
         params = {
             'access_token': self.TOKEN_USER,
             'sort': 0,
-            'count': 500,
+            'count': 1000,
             'has_photo': 1,
             'v': 5.199,
             'fields': 'city,sex,counters',
@@ -107,7 +106,7 @@ class VK_Users:
         )
         try:
             user_photos = response.json()['response']['items']
-            if len(user_photos) > 3:
+            if len(user_photos) > 2:
                 for photo in user_photos:
                     likes.append(photo['likes']['count'])
                 sort_likes = sorted(likes, reverse=True)[:3]
@@ -160,10 +159,10 @@ class VK_Users:
 
 
 if __name__ == '__main__':
-    ap = VK_Users(TOKEN_USER)
-    # sex = 1
-    # city = 2
-    # year = 1986
+    # ap = VK_Users(TOKEN_USER)
+    sex = 1
+    city = 2
+    year = 1986
     # data_qoest = ap.data_users(sex, city, year)
     # pprint(ap.data_users(2,1,1986))
     # user_vk = 741057420
